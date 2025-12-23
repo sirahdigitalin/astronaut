@@ -86,7 +86,11 @@ const Index = () => {
           )}
 
           {appState === 'success' && (
-            <SuccessMessage email={submittedEmail} onReset={handleReset} />
+            <SuccessMessage 
+              email={submittedEmail} 
+              photoData={capturedPhoto || undefined}
+              onReset={handleReset} 
+            />
           )}
 
           {appState === 'error' && (
