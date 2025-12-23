@@ -1,4 +1,4 @@
-const WEBHOOK_URL = 'https://n8n.srv930949.hstgr.cloud/webhook/astronaut';
+import { supabase } from '@/integrations/supabase/client';
 
 interface SubmitPhotoParams {
   photoData: string; // Base64 data URL
@@ -15,19 +15,19 @@ export async function submitPhoto({ photoData, email }: SubmitPhotoParams): Prom
     // Remove the data URL prefix to get just the base64 data
     const base64Data = photoData.replace(/^data:image\/\w+;base64,/, '');
     
-    const response = await fetch(WEBHOOK_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    const { data, error } = await supabase.functions.invoke('submit-photo', {
+      body: {
         image: base64Data,
         email: email,
-      }),
+      },
     });
 
-    if (!response.ok) {
-      throw new Error(`Server error: ${response.status}`);
+    if (error) {
+      console.error('Submit photo error:', error);
+      return { 
+        success: false, 
+        error: error.message || 'Failed to send photo. Please try again.' 
+      };
     }
 
     return { success: true };

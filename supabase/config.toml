@@ -1,0 +1,4 @@
+project_id = "qnuanlkaokxcvcdgqppx"
+
+[functions.submit-photo]
+verify_jwt = false
